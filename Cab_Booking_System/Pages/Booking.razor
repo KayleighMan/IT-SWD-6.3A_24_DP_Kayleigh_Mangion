@@ -1,0 +1,109 @@
+﻿@page "/book"
+@using Cab_Frontend.Models
+@using Cab_Frontend.Services
+@inject HttpClient Http
+@inject UserSessionService Session
+@inject NavigationManager Nav
+
+<h3>Book a Cab</h3>
+
+<EditForm Model="@booking" OnValidSubmit="SubmitBooking">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>Start Location</label>
+        <InputText @bind-Value="booking.StartLocation" class="form-control" />
+    </div>
+
+    <div class="mb-2">
+        <label>End Location</label>
+        <InputText @bind-Value="booking.EndLocation" class="form-control" />
+    </div>
+
+    <div class="mb-2">
+        <label>Trip Date & Time</label>
+        <InputDate @bind-Value="booking.TripDateTime" class="form-control" />
+    </div>
+
+    <div class="mb-2">
+        <label>Passenger Count</label>
+        <InputNumber @bind-Value="booking.PassengerCount" class="form-control" />
+    </div>
+
+    <div class="mb-2">
+        <label>Cab Type</label>
+        <InputSelect @bind-Value="booking.CabType" class="form-control">
+            <option value="">-- Select Cab Type --</option>
+            <option value="Economic">Economic</option>
+            <option value="Premium">Premium</option>
+            <option value="Executive">Executive</option>
+        </InputSelect>
+    </div>
+
+    <button class="btn btn-primary">Book Now</button>
+</EditForm>
+
+<p class="mt-2 text-success">@result</p>
+
+<hr />
+
+<h4>Current Bookings</h4>
+@if (currentBookings.Any())
+{
+    <ul class="list-group">
+        @foreach (var b in currentBookings)
+        {
+            <li class="list-group-item">
+                <strong>@b.TripDateTime.ToShortDateString()</strong> → @b.StartLocation to @b.EndLocation
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No current bookings.</p>
+}
+
+<h4 class="mt-4">Past Bookings</h4>
+@if (pastBookings.Any())
+{
+    <ul class="list-group">
+        @foreach (var b in pastBookings)
+        {
+            <li class="list-group-item text-muted">
+                <strong>@b.TripDateTime.ToShortDateString()</strong> → @b.StartLocation to @b.EndLocation
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No past bookings.</p>
+}
+
+@code {
+    BookingRequest booking = new();
+    List<BookingDto> currentBookings = new();
+    List<BookingDto> pastBookings = new();
+    string? result;
+
+    protected override async Task OnInitializedAsync()
+    {
+        booking.UserEmail = Session.Email;
+        booking.TripDateTime = DateTime.Now;
+        booking.PassengerCount = 1;
+
+        currentBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/current/{Session.Email}") ?? new();
+        pastBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/past/{Session.Email}") ?? new();
+    }
+
+    private async Task SubmitBooking()
+    {
+        var response = await Http.PostAsJsonAsync("api/Gateway/booking/create", booking);
+        result = await response.Content.ReadAsStringAsync();
+
+        currentBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/current/{Session.Email}") ?? new();
+        pastBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/past/{Session.Email}") ?? new();
+    }
+}

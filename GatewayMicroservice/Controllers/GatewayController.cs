@@ -33,6 +33,30 @@ namespace GatewayMicroservice.Controllers
             return Content(content, "application/json");
         }
 
+        // --------------------- Booking ---------------------
+        [HttpPost("booking/create")]
+        public async Task<IActionResult> CreateBooking([FromBody] BookingDto booking)
+        {
+            var response = await _http.PostAsJsonAsync("https://localhost:7085/api/Booking/create", booking);
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpGet("booking/current/{email}")]
+        public async Task<IActionResult> GetCurrentBookings(string email)
+        {
+            var response = await _http.GetAsync($"https://localhost:7085/api/Booking/current/{email}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpGet("booking/past/{email}")]
+        public async Task<IActionResult> GetPastBookings(string email)
+        {
+            var response = await _http.GetAsync($"https://localhost:7085/api/Booking/past/{email}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
 
     }
 }

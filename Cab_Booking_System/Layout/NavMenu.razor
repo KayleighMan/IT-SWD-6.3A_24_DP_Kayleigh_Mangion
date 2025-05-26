@@ -2,6 +2,8 @@
 @inject UserSessionService Session
 @inject NavigationManager Nav
 
+@implements IDisposable
+
 <div class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">🚖 Cab Booking</a>
@@ -28,13 +30,16 @@
         }
         else
         {
+            <NavLink href="/book" class="list-group-item list-group-item-action">
+                🚖 Book a Cab
+            </NavLink>
+            <NavLink href="/weather" class="list-group-item list-group-item-action">
+                ☁️ Weather
+            </NavLink>
             <button class="list-group-item list-group-item-action text-start" @onclick="Logout">
                 🚪 Logout
             </button>
         }
-        <NavLink href="/weather" class="list-group-item list-group-item-action">
-            ☁️ Weather
-        </NavLink>
     </div>
 </div>
 
@@ -52,5 +57,15 @@
     {
         Session.Logout();
         Nav.NavigateTo("/");
+    }
+
+    protected override void OnInitialized()
+    {
+        Session.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        Session.OnChange -= StateHasChanged;
     }
 }

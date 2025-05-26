@@ -23,12 +23,16 @@ namespace BookingMicroservice.Services
 
         public async Task<List<Booking>> GetCurrentBookingsAsync(string userEmail)
         {
-            return await _bookings.Find(b => b.UserEmail == userEmail && b.Status == "Current").ToListAsync();
+            return await _bookings.Find(b =>
+                b.UserEmail == userEmail &&
+                b.TripDateTime >= DateTime.Today).ToListAsync();
         }
 
         public async Task<List<Booking>> GetPastBookingsAsync(string userEmail)
         {
-            return await _bookings.Find(b => b.UserEmail == userEmail && b.Status == "Past").ToListAsync();
+            return await _bookings.Find(b =>
+                b.UserEmail == userEmail &&
+                b.TripDateTime < DateTime.Today).ToListAsync();
         }
     }
 }
