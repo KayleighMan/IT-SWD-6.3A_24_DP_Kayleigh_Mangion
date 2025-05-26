@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99 d17.13
+VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerMicroservice", "IT-SWD-6.3A_24_DP_Kayleigh_Mangion_\CustomerMicroservice.csproj", "{EB76EF8B-C627-4773-B184-4602767454E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingMicroservice", "BookingMicroservice\BookingMicroservice.csproj", "{8B354657-BCB1-4B11-A079-009D4357B8F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentMicroservice", "PaymentMicroservice\PaymentMicroservice.csproj", "{F56C1892-1339-42B0-BE7E-E0042A9462B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8B354657-BCB1-4B11-A079-009D4357B8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B354657-BCB1-4B11-A079-009D4357B8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B354657-BCB1-4B11-A079-009D4357B8F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56C1892-1339-42B0-BE7E-E0042A9462B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56C1892-1339-42B0-BE7E-E0042A9462B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56C1892-1339-42B0-BE7E-E0042A9462B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56C1892-1339-42B0-BE7E-E0042A9462B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
