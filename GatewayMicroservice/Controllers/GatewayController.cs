@@ -75,7 +75,47 @@ namespace GatewayMicroservice.Controllers
             return Content(content, "application/json");
         }
 
+        // --------------------- Location ------------------
 
+        [HttpPost("location/add")]
+        public async Task<IActionResult> AddLocation([FromBody] LocationDto loc)
+        {
+            var response = await _http.PostAsJsonAsync("https://localhost:7077/api/Location/add", loc);
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpPut("location/update")]
+        public async Task<IActionResult> UpdateLocation([FromBody] LocationDto loc)
+        {
+            var response = await _http.PutAsJsonAsync("https://localhost:7077/api/Location/update", loc);
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpDelete("location/delete/{id}")]
+        public async Task<IActionResult> DeleteLocation(string id)
+        {
+            var response = await _http.DeleteAsync($"https://localhost:7077/api/Location/delete/{id}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpGet("location/all/{email}")]
+        public async Task<IActionResult> GetLocations(string email)
+        {
+            var response = await _http.GetAsync($"https://localhost:7077/api/Location/all/{email}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpGet("location/weather/{city}")]
+        public async Task<IActionResult> GetWeather(string city)
+        {
+            var response = await _http.GetAsync($"https://localhost:7077/api/Location/weather/{city}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
 
     }
 }

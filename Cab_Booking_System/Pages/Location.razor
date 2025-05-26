@@ -1,0 +1,154 @@
+﻿@page "/location"
+@inject HttpClient Http
+@inject UserSessionService Session
+@inject NavigationManager Nav
+@using Cab_Frontend.Models
+@using Cab_Frontend.Services
+
+<h3>Saved Locations</h3>
+
+@if (locations == null)
+{
+    <p>Loading locations...</p>
+}
+else if (locations.Any())
+{
+    <ul class="list-group mb-3">
+        @foreach (var loc in locations)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <strong>@loc.Nickname</strong> — @loc.City
+                </span>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => GetWeatherFromSaved(loc.City)">Get Weather</button>
+                    <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteLocation(loc.Id)">Delete</button>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No saved locations yet.</p>
+}
+
+<hr />
+
+<h4>Add New Location</h4>
+<EditForm Model="@newLocation" OnValidSubmit="AddLocation">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>Nickname</label>
+        <InputText @bind-Value="newLocation.Nickname" class="form-control" />
+    </div>
+
+    <div class="mb-2">
+        <label>City</label>
+        <InputText @bind-Value="newLocation.City" class="form-control" />
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+</EditForm>
+
+<hr />
+<h4>Weather for City</h4>
+
+<InputText @bind-Value="weatherCity" class="form-control mb-2" placeholder="Enter city..." />
+
+<button class="btn btn-info mb-2" @onclick="FetchWeather">Get Weather</button>
+
+@if (!string.IsNullOrWhiteSpace(weatherCity))
+{
+    <p class="text-muted">You typed: <strong>@weatherCity</strong></p>
+}
+
+@if (weatherData != null)
+{
+    <div class="alert alert-info mt-3">
+        <strong>@weatherData.location.name</strong> (@weatherData.location.country)<br />
+        🌡️ Temperature: @weatherData.current.temp_c&nbsp;°C<br />
+        🌤️ Condition: @weatherData.current.condition.text
+    </div>
+}
+else if (!string.IsNullOrWhiteSpace(weatherResult))
+{
+    <div class="alert alert-danger mt-3">@weatherResult</div>
+}
+
+@code {
+    List<LocationDto> locations = new();
+    LocationDto newLocation = new();
+    string? weatherCity = "";
+    string weatherResult = "";
+    WeatherResponse? weatherData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        newLocation.Email = Session.Email;
+        await LoadLocations();
+    }
+
+    private async Task LoadLocations()
+    {
+        locations = await Http.GetFromJsonAsync<List<LocationDto>>($"api/Gateway/location/all/{Session.Email}") ?? new();
+    }
+
+    private async Task AddLocation()
+    {
+        newLocation.Email = Session.Email;
+        var response = await Http.PostAsJsonAsync("api/Gateway/location/add", newLocation);
+        if (response.IsSuccessStatusCode)
+        {
+            newLocation = new LocationDto { Email = Session.Email };
+            await LoadLocations();
+        }
+    }
+
+    private async Task DeleteLocation(string id)
+    {
+        var response = await Http.DeleteAsync($"api/Gateway/location/delete/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadLocations();
+        }
+    }
+
+    private async Task FetchWeather()
+    {
+        weatherData = null;
+        weatherResult = "";
+
+        if (string.IsNullOrWhiteSpace(weatherCity))
+        {
+            weatherResult = "Please enter a city.";
+            return;
+        }
+
+        try
+        {
+            var response = await Http.GetAsync($"api/Gateway/location/weather/{weatherCity}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                weatherData = await response.Content.ReadFromJsonAsync<WeatherResponse>();
+            }
+            else
+            {
+                weatherResult = $"Weather lookup failed. Status code: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            weatherResult = $"Error fetching weather: {ex.Message}";
+        }
+    }
+
+    private async Task GetWeatherFromSaved(string city)
+    {
+        weatherCity = city;
+        await FetchWeather();
+    }
+}
