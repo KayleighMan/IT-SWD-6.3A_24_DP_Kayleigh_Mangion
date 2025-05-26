@@ -1,0 +1,56 @@
+﻿@using Cab_Frontend.Services
+@inject UserSessionService Session
+@inject NavigationManager Nav
+
+<div class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">🚖 Cab Booking</a>
+        <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass bg-light border-end" id="sidebar">
+    <div class="list-group list-group-flush">
+        <NavLink href="/" Match="NavLinkMatch.All" class="list-group-item list-group-item-action">
+            🏠 Home
+        </NavLink>
+
+        @if (!Session.IsLoggedIn)
+        {
+            <NavLink href="/register" class="list-group-item list-group-item-action">
+                📝 Register
+            </NavLink>
+            <NavLink href="/login" class="list-group-item list-group-item-action">
+                🔐 Login
+            </NavLink>
+        }
+        else
+        {
+            <button class="list-group-item list-group-item-action text-start" @onclick="Logout">
+                🚪 Logout
+            </button>
+        }
+        <NavLink href="/weather" class="list-group-item list-group-item-action">
+            ☁️ Weather
+        </NavLink>
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse d-md-block" : "d-block";
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void Logout()
+    {
+        Session.Logout();
+        Nav.NavigateTo("/");
+    }
+}

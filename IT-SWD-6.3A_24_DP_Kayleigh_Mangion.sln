@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentMicroservice", "Paym
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationMicroservice", "LocationMicroservice\LocationMicroservice.csproj", "{A5EF335D-C5C4-4977-99FB-EEB24F564653}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cab_Frontend", "Cab_Booking_System\Cab_Frontend.csproj", "{AF8026C5-5E44-433F-86E5-4FF1CE9CEFA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayMicroservice", "GatewayMicroservice\GatewayMicroservice.csproj", "{831D2BB3-C648-488B-8B1C-720BB96D8C1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{A5EF335D-C5C4-4977-99FB-EEB24F564653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5EF335D-C5C4-4977-99FB-EEB24F564653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5EF335D-C5C4-4977-99FB-EEB24F564653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF8026C5-5E44-433F-86E5-4FF1CE9CEFA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF8026C5-5E44-433F-86E5-4FF1CE9CEFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF8026C5-5E44-433F-86E5-4FF1CE9CEFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF8026C5-5E44-433F-86E5-4FF1CE9CEFA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{831D2BB3-C648-488B-8B1C-720BB96D8C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{831D2BB3-C648-488B-8B1C-720BB96D8C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{831D2BB3-C648-488B-8B1C-720BB96D8C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{831D2BB3-C648-488B-8B1C-720BB96D8C1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

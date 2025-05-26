@@ -1,0 +1,38 @@
+﻿@page "/login"
+@inject HttpClient Http
+@inject UserSessionService Session
+@inject NavigationManager Nav
+@using Cab_Frontend.Models
+@using Cab_Frontend.Services
+
+
+<h3>Login</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="LoginUser">
+    <InputText @bind-Value="loginModel.Email" placeholder="Email" class="form-control mb-2" />
+    <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" class="form-control mb-2" />
+    <button class="btn btn-success">Login</button>
+</EditForm>
+
+<p>@result</p>
+
+@code {
+    LoginRequest loginModel = new();
+    string result;
+
+    private async Task LoginUser()
+    {
+        var res = await Http.PostAsJsonAsync("api/Gateway/customer/login", loginModel);
+        if (res.IsSuccessStatusCode)
+        {
+            Session.Login(loginModel.Email);
+            result = "Login successful.";
+            Nav.NavigateTo("/book"); 
+        }
+        else
+        {
+            result = "Login failed.";
+        }
+    }
+
+}
