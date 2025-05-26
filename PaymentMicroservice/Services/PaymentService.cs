@@ -4,7 +4,7 @@ using PaymentMicroservice.Models;
 
 namespace PaymentMicroservice.Services
 {
-    public class PaymentService : IPaymentService
+    public class PaymentService : InterfacePaymentService
     {
         private readonly IMongoCollection<Payment> _paymentCollection;
 

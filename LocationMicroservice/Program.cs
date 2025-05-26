@@ -1,12 +1,12 @@
-using PaymentMicroservice.Models;
-using PaymentMicroservice.Services;
+using LocationMicroservice.Models;
+using LocationMicroservice.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
-builder.Services.AddScoped<InterfacePaymentService, PaymentService>();
+builder.Services.AddHttpClient<InterfaceLocationService, LocationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

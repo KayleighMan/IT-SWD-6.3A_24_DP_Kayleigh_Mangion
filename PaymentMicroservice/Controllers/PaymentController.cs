@@ -8,9 +8,9 @@ namespace PaymentMicroservice.Controllers
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymentService _paymentService;
+        private readonly InterfacePaymentService _paymentService;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(InterfacePaymentService paymentService)
         {
             _paymentService = paymentService;
         }
