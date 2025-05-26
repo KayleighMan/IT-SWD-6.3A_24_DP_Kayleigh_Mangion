@@ -58,5 +58,24 @@ namespace GatewayMicroservice.Controllers
             return Content(content, "application/json");
         }
 
+        // --------------------- Payment --------------
+        [HttpPost("payment/pay")]
+        public async Task<IActionResult> MakePayment([FromBody] PaymentDto payment)
+        {
+            var response = await _http.PostAsJsonAsync("https://localhost:7057/api/Payment/pay", payment);
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+        [HttpGet("payment/details/{bookingId}")]
+        public async Task<IActionResult> GetPaymentDetails(string bookingId)
+        {
+            var response = await _http.GetAsync($"https://localhost:7057/api/Payment/details/{bookingId}");
+            var content = await response.Content.ReadAsStringAsync();
+            return Content(content, "application/json");
+        }
+
+
+
     }
 }

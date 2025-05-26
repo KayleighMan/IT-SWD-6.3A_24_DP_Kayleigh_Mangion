@@ -46,6 +46,15 @@
 
 <p class="mt-2 text-success">@result</p>
 
+@if (paymentResult != null)
+{
+    <div class="alert alert-info mt-3">
+        <strong>Payment Confirmation</strong><br />
+        Fare: €@paymentResult.TotalPrice<br />
+        Paid At: @paymentResult.PaidAt.ToLocalTime()
+    </div>
+}
+
 <hr />
 
 <h4>Current Bookings</h4>
@@ -86,6 +95,7 @@ else
     BookingRequest booking = new();
     List<BookingDto> currentBookings = new();
     List<BookingDto> pastBookings = new();
+    PaymentResponse? paymentResult;
     string? result;
 
     protected override async Task OnInitializedAsync()
@@ -102,6 +112,23 @@ else
     {
         var response = await Http.PostAsJsonAsync("api/Gateway/booking/create", booking);
         result = await response.Content.ReadAsStringAsync();
+
+        // Create payment after booking
+        var paymentReq = new Payment
+            {
+                BookingId = Guid.NewGuid().ToString(), 
+                CabType = booking.CabType,
+                DateTime = booking.TripDateTime,
+                PassengerCount = booking.PassengerCount,
+                BaseFare = 10,
+                ApplyDiscount = false
+            };
+
+        var paymentRes = await Http.PostAsJsonAsync("api/Gateway/payment/pay", paymentReq);
+        if (paymentRes.IsSuccessStatusCode)
+        {
+            paymentResult = await paymentRes.Content.ReadFromJsonAsync<PaymentResponse>();
+        }
 
         currentBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/current/{Session.Email}") ?? new();
         pastBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/past/{Session.Email}") ?? new();
