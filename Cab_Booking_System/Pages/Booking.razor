@@ -21,10 +21,15 @@
         <InputText @bind-Value="booking.EndLocation" class="form-control" />
     </div>
 
-    <div class="mb-2">
-        <label>Trip Date & Time</label>
-        <InputDate @bind-Value="booking.TripDateTime" class="form-control" />
+    <div>
+        <label>Date:</label>
+        <InputDate @bind-Value="tripDate" class="form-control" />
     </div>
+    <div>
+        <label>Time:</label>
+        <InputText @bind-Value="tripTime" type="time" class="form-control" />
+    </div>
+
 
     <div class="mb-2">
         <label>Passenger Count</label>
@@ -64,7 +69,7 @@
         @foreach (var b in currentBookings)
         {
             <li class="list-group-item">
-                <strong>@b.TripDateTime.ToShortDateString()</strong> → @b.StartLocation to @b.EndLocation
+                <strong>@b.TripDateTime.ToLocalTime().ToString("g")</strong> <!-- "30/05/2025 12:48" -->
             </li>
         }
     </ul>
@@ -81,7 +86,7 @@ else
         @foreach (var b in pastBookings)
         {
             <li class="list-group-item text-muted">
-                <strong>@b.TripDateTime.ToShortDateString()</strong> → @b.StartLocation to @b.EndLocation
+                <strong>@b.TripDateTime.ToLocalTime().ToString("g")</strong> <!-- "30/05/2025 12:48" -->
             </li>
         }
     </ul>
@@ -97,6 +102,9 @@ else
     List<BookingDto> pastBookings = new();
     PaymentResponse? paymentResult;
     string? result;
+    private DateTime tripDate = DateTime.Today;
+    private string tripTime = DateTime.Now.ToString("HH:mm");
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,6 +118,16 @@ else
 
     private async Task SubmitBooking()
     {
+        if (TimeSpan.TryParse(tripTime, out var time))
+        {
+            booking.TripDateTime = tripDate.Date + time;
+        }
+        else
+        {
+            result = "❌ Invalid time format.";
+            return;
+        }
+
         var response = await Http.PostAsJsonAsync("api/Gateway/booking/create", booking);
         result = await response.Content.ReadAsStringAsync();
 
