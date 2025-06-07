@@ -1,8 +1,20 @@
 ﻿@page "/"
 
+@using Cab_Frontend.Services
+@inject UserSessionService Session
+
+
 <h3>Welcome to Cab Booking</h3>
 
-<ul>
-    <li><NavLink href="/register">Register</NavLink></li>
-    <li><NavLink href="/login">Login</NavLink></li>
-</ul>
+@if (!Session.IsLoggedIn)
+{
+    <ul>
+        <li><NavLink href="/register">Register</NavLink></li>
+        <li><NavLink href="/login">Login</NavLink></li>
+    </ul>
+}
+else
+{
+    <p>You are logged in as <strong>@Session.Email</strong>.</p>
+    <p>Use the sidebar to book a cab or view weather info.</p>
+}

@@ -68,9 +68,11 @@
     <ul class="list-group">
         @foreach (var b in currentBookings)
         {
-            <li class="list-group-item">
-                <strong>@b.TripDateTime.ToLocalTime().ToString("g")</strong> <!-- "30/05/2025 12:48" -->
-            </li>
+            <div>
+                <strong>@b.TripDateTime.ToLocalTime().ToString("g")</strong><br />
+                From: @b.StartLocation → To: @b.EndLocation
+            </div>
+
         }
     </ul>
 }
@@ -85,9 +87,11 @@ else
     <ul class="list-group">
         @foreach (var b in pastBookings)
         {
-            <li class="list-group-item text-muted">
-                <strong>@b.TripDateTime.ToLocalTime().ToString("g")</strong> <!-- "30/05/2025 12:48" -->
-            </li>
+            <div>
+                <strong>@b.TripDateTime.ToLocalTime().ToString("g")</strong><br />
+                From: @b.StartLocation → To: @b.EndLocation
+            </div>
+
         }
     </ul>
 }
@@ -108,6 +112,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        if (!Session.IsLoggedIn)
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
         booking.UserEmail = Session.Email;
         booking.TripDateTime = DateTime.Now;
         booking.PassengerCount = 1;
@@ -115,6 +125,7 @@ else
         currentBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/current/{Session.Email}") ?? new();
         pastBookings = await Http.GetFromJsonAsync<List<BookingDto>>($"api/Gateway/booking/past/{Session.Email}") ?? new();
     }
+
 
     private async Task SubmitBooking()
     {

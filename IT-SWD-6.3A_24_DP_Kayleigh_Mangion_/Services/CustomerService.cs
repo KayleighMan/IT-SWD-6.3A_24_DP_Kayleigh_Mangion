@@ -29,11 +29,13 @@ namespace CustomerMicroservice.Services
         public async Task<bool> LoginAsync(string email, string password)
         {
             var user = await _customers.Find(x => x.Email == email).FirstOrDefaultAsync();
-            if (user == null)
+
+            if (user == null || string.IsNullOrWhiteSpace(user.Password))
                 return false;
 
             return BCrypt.Net.BCrypt.Verify(password, user.Password);
         }
+
 
 
         public async Task<Customer> GetByEmailAsync(string email)
